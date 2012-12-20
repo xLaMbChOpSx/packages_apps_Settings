@@ -907,6 +907,12 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <!-- Performance Control -->
     <string name="performance_settings_title">Performance</string>
 
+    <!-- About device screen, Cpu info. -->
+    <string name="cpu_info">CPU</string>
+
+    <!-- About phone screen, Free memory info -->
+    <string name="mem_info">Memory</string>
+
     <!-- Chamber of Secrets -->
     <string name="chamber_title">Chamber of secrets</string>
     <string name="chamber_toast">The chamber of secrets has opened</string>
