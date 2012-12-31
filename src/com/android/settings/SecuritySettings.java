@@ -46,6 +46,7 @@ import android.util.Log;
 
 import com.android.internal.telephony.util.BlacklistUtils;
 import com.android.internal.util.slim.DeviceUtils;
+import com.android.internal.view.RotationPolicy;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.R;
 
@@ -80,6 +81,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
     private static final String KEY_ADVANCED_REBOOT = "advanced_reboot";
     private static final String MENU_UNLOCK_PREF = "menu_unlock";
     private static final String HOME_UNLOCK_PREF = "home_unlock";
+    private static final String LOCKSCREEN_AUTO_ROTATE_PREF = "lockscreen_auto_rotate";
 
     private static final int SET_OR_CHANGE_LOCK_METHOD_REQUEST = 123;
     private static final int CONFIRM_EXISTING_FOR_BIOMETRIC_WEAK_IMPROVE_REQUEST = 124;
@@ -136,6 +138,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
     private CheckBoxPreference mHomeUnlock;
 
     private CheckBoxPreference mBatteryStatus;
+    private CheckBoxPreference mLockscreenAutoRotate;
 
     private Preference mNotificationAccess;
 
@@ -360,6 +363,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
         }
 
         mBatteryStatus = (CheckBoxPreference) root.findPreference(KEY_ALWAYS_BATTERY_PREF);
+        mLockscreenAutoRotate = (CheckBoxPreference) root.findPreference(LOCKSCREEN_AUTO_ROTATE_PREF);
 
         // Menu Unlock
         mMenuUnlock = (CheckBoxPreference) root.findPreference(MENU_UNLOCK_PREF);
@@ -663,6 +667,19 @@ public class SecuritySettings extends RestrictedSettingsFragment
             mBatteryStatus.setOnPreferenceChangeListener(this);
         }
 
+        if (mLockscreenAutoRotate != null) {
+            int defaultValue = getResources().getBoolean(com.android.internal.R.bool.config_enableLockScreenRotation) ? 1 : 0;
+            mLockscreenAutoRotate.setChecked(Settings.System.getIntForUser(getContentResolver(),
+                    Settings.System.LOCKSCREEN_AUTO_ROTATE, defaultValue,
+                    UserHandle.USER_CURRENT) == 1);
+            mLockscreenAutoRotate.setOnPreferenceChangeListener(this);
+
+            if (RotationPolicy.isRotationLocked(getActivity())) {
+                mLockscreenAutoRotate.setEnabled(false);
+                mLockscreenAutoRotate.setSummary(getResources().getString(R.string.lockscreen_no_rotate_summary));
+            }
+        }
+
         updateBlacklistSummary();
     }
 
@@ -794,6 +811,10 @@ public class SecuritySettings extends RestrictedSettingsFragment
         } else if (preference == mBatteryStatus) {
             Settings.System.putIntForUser(getContentResolver(),
                     Settings.System.LOCKSCREEN_ALWAYS_SHOW_BATTERY,
+                    ((Boolean) value) ? 1 : 0, UserHandle.USER_CURRENT);
+        } else if (preference == mLockscreenAutoRotate) {
+            Settings.System.putIntForUser(getContentResolver(),
+                    Settings.System.LOCKSCREEN_AUTO_ROTATE,
                     ((Boolean) value) ? 1 : 0, UserHandle.USER_CURRENT);
         } else if (preference == mMenuUnlock) {
             Settings.System.putIntForUser(getContentResolver(),
