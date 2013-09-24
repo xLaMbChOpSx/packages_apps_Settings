@@ -96,6 +96,12 @@
             android:entryValues="@array/lockscreen_battery_status_values"
             android:defaultValue="0" />
 
+        <PreferenceScreen
+            android:key="active_display"
+            android:fragment="com.android.settings.chameleonos.ActiveDisplaySettings"
+            android:title="@string/ad_settings_title"
+            android:summary="@string/ad_settings_summary" />
+
          <PreferenceScreen
             android:fragment="com.android.settings.slim.LockscreenButtons"
             android:key="lockscreen_buttons"
