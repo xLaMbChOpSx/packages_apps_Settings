@@ -49,6 +49,11 @@
             android:summary="@string/lockscreen_battery_status_summary" />
 
         <CheckBoxPreference
+            android:key="battery_around_lockscreen_ring"
+            android:title="@string/battery_around_lockscreen_ring"
+            android:defaultValue="false" />
+
+        <CheckBoxPreference
                 android:key="lockscreen_auto_rotate"
                 android:title="@string/lockscreen_auto_rotate_title"
                 android:summary="@string/lockscreen_auto_rotate_summary" />

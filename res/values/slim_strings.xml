@@ -971,6 +971,9 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="lockscreen_auto_rotate_summary">Lockscreen will have the ability to rotate. This is dependent of Auto-rotation in display</string>
     <string name="lockscreen_no_rotate_summary">System auto rotate is disabled. Enable it for this option.</string>
 
+    <!-- Battery level around lock ring -->
+    <string name="battery_around_lockscreen_ring">Battery level around lock ring</string>
+
     <!-- Chamber of Secrets -->
     <string name="chamber_title">Chamber of secrets</string>
     <string name="chamber_toast">The chamber of secrets has opened</string>
