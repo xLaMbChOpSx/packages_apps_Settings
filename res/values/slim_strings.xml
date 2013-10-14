@@ -1607,4 +1607,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="smart_cover_wake_title">Smart cover wake</string>
     <string name="smart_cover_wake_summary">Wakeup device when smart cover opens</string>
 
+    <!-- Restart SystemUI -->
+    <string name="restart_systemui">Restart SystemUI</string>
+
 </resources>

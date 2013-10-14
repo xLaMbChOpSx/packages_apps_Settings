@@ -75,6 +75,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.android.settings.util.CMDProcessor;
+
 /*
  * Displays preferences for application developers.
  */
@@ -97,6 +99,7 @@ public class DevelopmentSettings extends PreferenceFragment
     private static final String ADB_NOTIFY = "adb_notify";
     private static final String ADB_TCPIP  = "adb_over_network";
     private static final String CLEAR_ADB_KEYS = "clear_adb_keys";
+    private static final String RESTART_SYSTEMUI = "restart_systemui";
     private static final String KEEP_SCREEN_ON = "keep_screen_on";
     private static final String ALLOW_MOCK_LOCATION = "allow_mock_location";
     private static final String HDCP_CHECKING_KEY = "hdcp_checking";
@@ -166,6 +169,7 @@ public class DevelopmentSettings extends PreferenceFragment
     private CheckBoxPreference mEnableAdb;
     private CheckBoxPreference mAdbNotify;
     private Preference mClearAdbKeys;
+    private Preference mRestartSystemUI;
     private CheckBoxPreference mAdbOverNetwork;
     private CheckBoxPreference mKeepScreenOn;
     private CheckBoxPreference mEnforceReadExternal;
@@ -255,6 +259,7 @@ public class DevelopmentSettings extends PreferenceFragment
             }
         }
 
+        mRestartSystemUI = findPreference(RESTART_SYSTEMUI);
         mAdbOverNetwork = findAndInitCheckboxPref(ADB_TCPIP);
         mKeepScreenOn = findAndInitCheckboxPref(KEEP_SCREEN_ON);
         mEnforceReadExternal = findAndInitCheckboxPref(ENFORCE_READ_EXTERNAL);
@@ -1205,6 +1210,8 @@ public class DevelopmentSettings extends PreferenceFragment
                         .setPositiveButton(android.R.string.ok, this)
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
+        } else if (preference == mRestartSystemUI) {
+            new CMDProcessor().su.run("pkill -TERM -f com.android.systemui");
         } else if (preference == mAdbNotify) {
             Settings.Secure.putInt(getActivity().getContentResolver(),
                     Settings.Secure.ADB_NOTIFY,
