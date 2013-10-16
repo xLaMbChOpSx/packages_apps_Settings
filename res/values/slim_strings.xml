@@ -775,6 +775,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="title_tile_customshortcut">Custom Shortcut</string>
     <string name="title_tile_fcharge">Fast charge</string>
     <string name="title_tile_quiet_hours">Quiet hours</string>
+    <string name="title_tile_stay_awake">Stay Awake</string>
     <string name="title_dynamic_tiles">Dynamic tiles</string>
     <string name="dynamic_tiles_note_title">Note</string>
     <string name="dynamic_tiles_note_summary">Dynamic tiles are not always visible and will only show up if triggered by a system event</string>
