@@ -1165,6 +1165,11 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="noti_reminder_interval_3dot5s">3.5 second</string>
     <string name="noti_reminder_interval_4s">4 seconds</string>
 
+    <!-- Data Usage -->
+    <!-- Subtitle of dialog for editing data usage cycle reset date. [CHAR LIMIT=32] -->
+    <string name="data_usage_cycle_editor_subtitle_cm">Date of each cycle:</string>
+    <!-- Subtitle of dialog for editing data usage cycle length. [CHAR LIMIT=32] -->
+    <string name="data_usage_lengths_spinner_subtitle">Cycle length:</string>
 
     <!-- Recent panel -->
     <string name="recent_panel_category">Recent apps panel</string>
