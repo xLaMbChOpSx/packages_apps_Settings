@@ -131,6 +131,12 @@
                 android:title="@string/slim_version_title"
                 android:summary="@string/slim_version_default"/>
 
+        <!-- SlimSaber version -->
+        <Preference android:key="slimsaber_version"
+                style="?android:preferenceInformationStyle"
+                android:title="@string/slimsaber_version_title"
+                android:summary="@string/slimsaber_version_default"/>
+
         <!-- Detailed build version -->
         <Preference android:key="build_number"
                 style="?android:preferenceInformationStyle"
