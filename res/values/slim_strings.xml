@@ -360,6 +360,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="shortcut_action_ime">Open IME Switcher</string>
     <string name="shortcut_action_kill">Kill app</string>
     <string name="shortcut_action_power">Screen Off</string>
+    <string name="shortcut_action_theme_switch">Theme switcher</string>
     <string name="shortcut_action_notifications">Notifications</string>
     <string name="shortcut_action_menu_big">Menu</string>
     <string name="shortcut_action_qs">Quicksettings panel</string>
@@ -793,6 +794,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="title_tile_expanded_desktop">Expanded desktop</string>
     <string name="title_tile_music">Music</string>
     <string name="title_tile_reboot">Reboot</string>
+    <string name="title_tile_theme">Theme switcher</string>
     <string name="dynamic_tile_ime_switcher">IME switcher</string>
     <string name="dynamic_tile_usb_tether">USB tether</string>
     <string name="dynamic_tile_alarm">Alarm</string>
@@ -831,7 +833,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
 
     <!-- QuickSettings: Quick Pulldown -->
     <string name="title_quick_pulldown">Quick pulldown</string>
-    <string name="summary_quick_pulldown">edge of the status bar pulls down Quick Settings</string>
+    <string name="summary_quick_pulldown">%1$s edge of the status bar pulls down Quick Settings</string>
     <string name="quick_pulldown_off">Off</string>
     <string name="quick_pulldown_left">Left</string>
     <string name="quick_pulldown_right">Right</string>
@@ -870,5 +872,13 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <!-- Stylus Icon -->
     <string name="stylus_icon_enabled_title">Show icon when using stylus</string>
     <string name="stylus_icon_enabled_summary">Show the pointer icon while using stylus</string>
+
+    <!-- Themes -->
+    <string name="theme_settings_title">The real dark slim</string>
+    <string name="theme_auto_mode_title">Switch theme</string>
+    <string name="theme_auto_mode_off">Manual</string>
+    <string name="theme_auto_mode_lightsensor">On light condition change</string>
+    <string name="theme_auto_mode_twilight">On daytime</string>
+    <string name="theme_auto_switch_mode_error">Automatic light condition change mode is enabled. Manual switching is not possible.</string>
 
 </resources>
