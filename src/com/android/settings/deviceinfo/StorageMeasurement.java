@@ -461,9 +461,7 @@ public class StorageMeasurement {
 
     private static long getDirectorySize(IMediaContainerService imcs, File path) {
         try {
-            final long size = imcs.calculateDirectorySize(path.toString());
-            Log.d(TAG, "getDirectorySize(" + path + ") returned " + size);
-            return size;
+            return imcs.calculateDirectorySize(path.toString());
         } catch (Exception e) {
             Log.w(TAG, "Could not read memory from default container service for " + path, e);
             return 0;
