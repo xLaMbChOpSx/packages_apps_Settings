@@ -893,6 +893,16 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="usb_mass_storage_summary">Lets you transfer any files between your computer and your SD card by mounting it as a flash device</string>
     <string name="storage_rescan_media">Rescan media for the storage volume</string>
     <string name="storage_rescan_media_complete">Scan completed</string>
+
+    <!-- Advanced storage settings-->
+    <string name="storage_title_advanced">Advanced storage settings</string>
+    <string name="storage_menu_advanced">Advanced storage settings</string>
+    <string name="primary_storage_category">Primary storage</string>
+    <string name="switch_external_title">Switch external storage</string>
+    <string name="switch_external_summary">Use the secondary storage device (e.g. microSD) as the primary storage and vice versa.</string>
+    <string name="switch_external_unavailable">This device is not configured to allow switchable storage volumes.</string>
+    <string name="switch_external_reboot_prompt_title">Reboot required</string>
+    <string name="switch_external_reboot_prompt_message">In order to apply the new storage configuration, a reboot is required.\n\nDo you want to reboot now?</string>
    
     <!-- Chamber of Secrets -->
     <string name="chamber_title">Chamber of secrets</string>

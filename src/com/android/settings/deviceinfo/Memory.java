@@ -176,9 +176,12 @@ public class Memory extends SettingsPreferenceFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         final MenuItem usb = menu.findItem(R.id.storage_usb);
+        final MenuItem advStorage = menu.findItem(R.id.storage_advanced);
         UserManager um = (UserManager)getActivity().getSystemService(Context.USER_SERVICE);
         boolean usbItemVisible = !um.hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER);
         usb.setVisible(usbItemVisible);
+        boolean advStorageItemVisible = !Environment.isExternalStorageEmulated();
+        advStorage.setVisible(advStorageItemVisible);
     }
 
     @Override
@@ -195,6 +198,16 @@ public class Memory extends SettingsPreferenceFragment {
                     startFragment(this, UsbSettings.class.getCanonicalName(), -1, null);
                 }
                 return true;
+            case R.id.storage_advanced:
+                if (getActivity() instanceof PreferenceActivity) {
+                    ((PreferenceActivity) getActivity()).startPreferencePanel(
+                            AdvancedStorageSettings.class.getCanonicalName(),
+                            null,
+                            R.string.storage_title_advanced, null,
+                            this, 0);
+                } else {
+                    startFragment(this, AdvancedStorageSettings.class.getCanonicalName(), -1, null);
+                }
         }
         return super.onOptionsItemSelected(item);
     }
