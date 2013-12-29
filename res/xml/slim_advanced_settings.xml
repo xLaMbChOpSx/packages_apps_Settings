@@ -45,4 +45,9 @@
             android:targetClass="com.cyanogenmod.settings.device.DeviceSettings" />
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:title="@string/performance_settings_title"
+        android:fragment="com.brewcrewfoo.performance.activities.MainActivity">
+    </PreferenceScreen>
+
 </PreferenceScreen>

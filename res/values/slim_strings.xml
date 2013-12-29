@@ -903,7 +903,10 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="switch_external_unavailable">This device is not configured to allow switchable storage volumes.</string>
     <string name="switch_external_reboot_prompt_title">Reboot required</string>
     <string name="switch_external_reboot_prompt_message">In order to apply the new storage configuration, a reboot is required.\n\nDo you want to reboot now?</string>
-   
+
+    <!-- Performance Control -->
+    <string name="performance_settings_title">Performance</string>
+
     <!-- Chamber of Secrets -->
     <string name="chamber_title">Chamber of secrets</string>
     <string name="chamber_toast">The chamber of secrets has opened</string>
