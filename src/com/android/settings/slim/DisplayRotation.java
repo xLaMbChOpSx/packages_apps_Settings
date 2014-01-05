@@ -88,7 +88,7 @@ public class DisplayRotation extends SettingsPreferenceFragment implements OnPre
         mSwapVolumeButtons = (CheckBoxPreference) prefSet.findPreference(KEY_SWAP_VOLUME_BUTTONS);
 
         int swapVolumeKeys = Settings.System.getInt(getContentResolver(),
-                Settings.System.SWAP_VOLUME_KEYS_BY_ROTATE, 0);
+                Settings.System.SWAP_VOLUME_KEYS_BY_ROTATE, 1);
 
         mSwapVolumeButtons.setChecked(swapVolumeKeys != 0);
     }
