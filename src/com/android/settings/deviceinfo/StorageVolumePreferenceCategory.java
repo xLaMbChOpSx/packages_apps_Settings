@@ -532,7 +532,8 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory
             public void run() {
                 mUsageBarPreference.notifyScanCompleted();
                 if (uri != null) {
-                    Toast.makeText(getContext(), R.string.storage_rescan_media_complete, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),
+                        R.string.storage_rescan_media_complete, Toast.LENGTH_SHORT).show();
                 }
             }
         });

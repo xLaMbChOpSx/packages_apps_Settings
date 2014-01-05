@@ -101,7 +101,8 @@ public class UsageBarPreference extends Preference {
         mChart = (PercentageBarChart) view.findViewById(R.id.percentage_bar_chart);
         mChart.setEntries(mEntries);
 
-        mRescanMediaWaiting = (ProgressBar) view.findViewById(R.id.memory_usage_rescan_media_waiting);
+        mRescanMediaWaiting =
+                (ProgressBar) view.findViewById(R.id.memory_usage_rescan_media_waiting);
 
         mRescanMedia = (ImageView) view.findViewById(R.id.memory_usage_rescan_media);
         mRescanMedia.setOnClickListener(new OnClickListener() {
