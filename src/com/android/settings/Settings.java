@@ -88,6 +88,7 @@ import com.android.settings.print.PrintSettingsFragment;
 import com.android.settings.slim.BatteryIconStyle;
 import com.android.settings.slim.blacklist.BlacklistSettings;
 import com.android.settings.slim.DisplayRotation;
+import com.android.settings.slim.quicksettings.QuickSettingsTiles;
 import com.android.settings.slim.QuietHours;
 import com.android.settings.slim.themes.ThemeEnabler;
 import com.android.settings.tts.TextToSpeechSettings;
@@ -361,8 +362,10 @@ public class Settings extends PreferenceActivity
         KeyboardLayoutPickerFragment.class.getName(),
         BlacklistSettings.class.getName(),
         QuietHours.class.getName(),
+        QuickSettingsTiles.class.getName(),
         BatteryIconStyle.class.getName(),
-        DisplayRotation.class.getName()
+        DisplayRotation.class.getName(),
+        ApnSettings.class.getName()
     };
 
     @Override
@@ -1160,8 +1163,11 @@ public class Settings extends PreferenceActivity
     public static class PaymentSettingsActivity extends Settings { /* empty */ }
     public static class PrintSettingsActivity extends Settings { /* empty */ }
     public static class PrintJobSettingsActivity extends Settings { /* empty */ }
+    public static class ApnSettingsActivity extends Settings { /* empty */ }
+    public static class ApnEditorActivity extends Settings { /* empty */ }
     public static class BlacklistSettingsActivity extends Settings { /* empty */ }
     public static class QuietHoursSettingsActivity extends Settings { /* empty */ }
+    public static class QuickSettingsTilesSettingsActivity extends Settings { /* empty */ }
     public static class BatteryIconStyleSettingsActivity extends Settings { /* empty */ }
     public static class DisplayRotationSettingsActivity extends Settings { /* empty */ }
 }
