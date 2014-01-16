@@ -236,7 +236,6 @@
     <string name="notification_drawer_title">Панель уведомлений</string>
     <string name="notification_style_title">Стиль панели уведомления</string>
     <string name="notification_style_summary">Изменить стиль панели уведомления</string>
-    <string name="notification_hide_carrier_title">Скрывать имя оператора</string>
     <string name="notification_wallpaper_title">Фон панели уведомлений</string>
     <string name="notification_wallpaper_landscape_title">Фон панели уведомлений в ландшафтном режиме</string>
     <string name="notification_background_color_fill">Заливка цветом</string>
@@ -628,7 +627,6 @@
     <string name="shortcuts_color_mode_title">Режим цвета значка</string>
     <string name="shortcuts_color_mode_summary">Изменить режим цвета значка ярлыка</string>
     <string name="notification_drawer_qs_title">Панель уведомлений и быстрых настроек</string>
-    <string name="notification_hide_carrier_summary">Скрывать имя оператора и Wi-Fi-сети в панели уведомлений</string>
     <string name="battery_icon_title">Значок батареи</string>
     <string name="battery_status_icon">Значок</string>
     <string name="battery_status_percentage">Проценты</string>
@@ -757,5 +755,30 @@
 
     <!-- Minimum Vibration Duration -->
     <string name="minimum_vibration_duration">Минимальная длительность вибрации</string>
+
+    <!-- ListView animation -->
+    <string name="interface_settings_animation_title">Настройки анимации</string>
+    <string name="listview_animation_title">Анимация списков</string>
+    <string name="listview_off">По умолчанию</string>
+    <string name="listview_wave_left">Волна (слева)</string>
+    <string name="listview_wave_right">Волна (справа)</string>
+    <string name="listview_alpha">Проявление</string>
+    <string name="listview_scale">Увеличение</string>
+    <string name="listview_stack_top">Стек (сверху)</string>
+    <string name="listview_stack_bottom">Стек (снизу)</string>
+    <string name="listview_unfold">Развернуть</string>
+    <string name="listview_fold">Свернуть</string>
+    <string name="listview_translate_left">Сдвиг (слева)</string>
+    <string name="listview_translate_right">Сдвиг (справа)</string>
+
+    <!-- ListView interpolator -->
+    <string name="listview_interpolator_title">Эффекты анимации списков</string>
+    <string name="listview_accelerate_interpolator">Усилить</string>
+    <string name="listview_decelerate_interpolator">Ослабить</string>
+    <string name="listview_accelerate_decelerate_interpolator">Усилить и ослабить</string>
+    <string name="listview_anticipate_interpolator">Ускорить</string>
+    <string name="listview_overshoot_interpolator">Проскочить</string>
+    <string name="listview_anticipate_overshoot_interpolator">Ускорить и проскочить</string>
+    <string name="listview_bounce_interpolator">Отскакивать</string>
 
 </resources>
