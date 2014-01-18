@@ -171,6 +171,7 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
     private boolean mLastEnabledState;
     private boolean mHaveDebugSettings;
     private boolean mDontPokeProperties;
+    private boolean mUnofficialBuild;
 
     private CheckBoxPreference mEnableAdb;
     private CheckBoxPreference mAdbNotify;
@@ -248,6 +249,8 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        mUnofficialBuild = android.os.Build.VERSION.CODENAME.equals("UNOFFICIAL");
 
         mWindowManager = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
         mBackupManager = IBackupManager.Stub.asInterface(
@@ -529,7 +532,7 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
         final ContentResolver cr = context.getContentResolver();
         mHaveDebugSettings = false;
         updateCheckBox(mEnableAdb, Settings.Global.getInt(cr,
-                Settings.Global.ADB_ENABLED, 0) != 0);
+                Settings.Global.ADB_ENABLED, mUnofficialBuild ? 1 : 0) != 0);
         mAdbNotify.setChecked(Settings.Secure.getInt(cr,
             Settings.Secure.ADB_NOTIFY, 1) != 0);
         if (mEnableTerminal != null) {
@@ -647,14 +650,14 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
     }
 
     private void updateRootAccessOptions() {
-        String value = SystemProperties.get(ROOT_ACCESS_PROPERTY, "0");
+        String value = SystemProperties.get(ROOT_ACCESS_PROPERTY, mUnofficialBuild ? "1" : "0");
         mRootAccess.setValue(value);
         mRootAccess.setSummary(getResources()
                 .getStringArray(R.array.root_access_entries)[Integer.valueOf(value)]);
     }
 
     private void writeRootAccessOptions(Object newValue) {
-        String oldValue = SystemProperties.get(ROOT_ACCESS_PROPERTY, "0");
+        String oldValue = SystemProperties.get(ROOT_ACCESS_PROPERTY, mUnofficialBuild ? "1" : "0");
         SystemProperties.set(ROOT_ACCESS_PROPERTY, newValue.toString());
         if (Integer.valueOf(newValue.toString()) < 2 && !oldValue.equals(newValue)
                 && "1".equals(SystemProperties.get("service.adb.root", "0"))) {
@@ -668,7 +671,7 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
     }
 
     private void resetRootAccessOptions() {
-        String oldValue = SystemProperties.get(ROOT_ACCESS_PROPERTY, "0");
+        String oldValue = SystemProperties.get(ROOT_ACCESS_PROPERTY, mUnofficialBuild ? "1" : "0");
         SystemProperties.set(ROOT_ACCESS_PROPERTY, "0");
         if (!oldValue.equals("1") && "1".equals(SystemProperties.get("service.adb.root", "0"))) {
             SystemProperties.set("service.adb.root", "0");
@@ -772,7 +775,8 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
 
     private boolean enableVerifierSetting() {
         final ContentResolver cr = getActivity().getContentResolver();
-        if (Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0) == 0) {
+        if (Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED,
+                    mUnofficialBuild ? 1 : 0) == 0) {
             return false;
         }
         if (Settings.Global.getInt(cr, Settings.Global.PACKAGE_VERIFIER_ENABLE, 1) == 0) {
@@ -799,7 +803,7 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
         if ("user".equals(Build.TYPE)) {
             final ContentResolver resolver = getActivity().getContentResolver();
             final boolean adbEnabled = Settings.Global.getInt(
-                    resolver, Settings.Global.ADB_ENABLED, 0) != 0;
+                    resolver, Settings.Global.ADB_ENABLED, mUnofficialBuild ? 1 : 0) != 0;
             if (adbEnabled) {
                 mBugreport.setEnabled(true);
                 mBugreportInPower.setEnabled(true);
@@ -1484,7 +1488,7 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
             writeAppProcessLimitOptions(newValue);
             return true;
         } else if (preference == mRootAccess) {
-            if ("0".equals(SystemProperties.get(ROOT_ACCESS_PROPERTY, "0"))
+            if ("0".equals(SystemProperties.get(ROOT_ACCESS_PROPERTY, mUnofficialBuild ? "1" : "0"))
                     && !"0".equals(newValue)) {
                 mSelectedRootValue = newValue;
                 mDialogClicked = false;
