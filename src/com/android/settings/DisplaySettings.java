@@ -154,6 +154,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                          e.printStackTrace();
                      }
                  }
+            } else {
+                 mLightOptions.removePreference(mNotificationPulse);
+                 mLightOptions.removePreference(mNotificationLight);
             }
 
             if (!getResources().getBoolean(
