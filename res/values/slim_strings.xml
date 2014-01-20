@@ -189,6 +189,13 @@
     <string name="link_volume_ringtones">Link ringtone &amp; notifications volumes</string>
     <string name="volume_ring_only_description">Ringtone</string>
 
+    <!-- Volume Overlay -->
+    <string name="volume_overlay_title">Volume panel style</string>
+    <string name="volume_overlay_single">Single</string>
+    <string name="volume_overlay_expandable">Expandable</string>
+    <string name="volume_overlay_expanded">Expanded</string>
+    <string name="volume_overlay_disable">Disable</string>
+
     <!-- Sound settings screen, setting check box label -->
     <string name="camera_sounds_title">Camera shutter sound</string>
     <string name="camera_sounds_summary">Enable system camera shutter sound</string>
@@ -782,6 +789,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="title_tile_battery">Battery</string>
     <string name="title_tile_bluetooth">Bluetooth</string>
     <string name="title_tile_brightness">Brightness</string>
+    <string name="title_tile_contact">Contact</string>
     <string name="title_tile_custom">Custom</string>
     <string name="title_tile_sleep">Go to sleep</string>
     <string name="title_tile_location">Location</string>
@@ -855,6 +863,17 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="quick_pulldown_off">Off</string>
     <string name="quick_pulldown_left">Left</string>
     <string name="quick_pulldown_right">Right</string>
+
+    <!-- QuickSettings: Smart Pulldown -->
+    <string name="smart_pulldown_title">Smart pulldown</string>
+    <string name="smart_pulldown_summary">Open Quick Settings when there are no %1$s notifications present</string>
+    <string name="smart_pulldown_off">Off</string>
+    <string name="smart_pulldown_dismissable">Dismissable</string>
+    <string name="smart_pulldown_persistent">Persistent</string>
+
+    <!-- QuickSettings: Quick Collapse -->
+    <string name="title_collapse_panel">Quick collapse</string>
+    <string name="summary_collapse_panel">Close the notification panel upon toggle</string>
 
     <!-- Stylus Gestures -->
     <string name="gestures_settings_title">Stylus gestures</string>
@@ -987,5 +1006,9 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="advanced_reboot_disabled">Disable</string>
     <string name="advanced_reboot_hide_on_keyguard">Hide on lock screen</string>
     <string name="advanced_reboot_show_always">Show always</string>
+
+    <!-- Keyguard always show battery -->
+    <string name="lockscreen_battery_status_title">Battery status</string>
+    <string name="lockscreen_battery_status_summary">Always show battery status on keyguard</string>
 
 </resources>
