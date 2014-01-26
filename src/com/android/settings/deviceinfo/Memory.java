@@ -178,7 +178,8 @@ public class Memory extends SettingsPreferenceFragment {
         final MenuItem usb = menu.findItem(R.id.storage_usb);
         final MenuItem advStorage = menu.findItem(R.id.storage_advanced);
         UserManager um = (UserManager)getActivity().getSystemService(Context.USER_SERVICE);
-        boolean usbItemVisible = !um.hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER);
+        boolean usbItemVisible = !isMassStorageEnabled()
+                && !um.hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER);
         usb.setVisible(usbItemVisible);
         boolean advStorageItemVisible = !Environment.isExternalStorageEmulated();
         advStorage.setVisible(advStorageItemVisible);

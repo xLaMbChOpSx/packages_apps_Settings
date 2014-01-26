@@ -923,12 +923,6 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <!-- Hostname setting -->
     <string name="device_hostname">Device hostname</string>
 
-    <!-- USB Mass Storage -->
-    <string name="usb_mass_storage_title">Mass storage (UMS)</string>
-    <string name="usb_mass_storage_summary">Lets you transfer any files between your computer and your SD card by mounting it as a flash device</string>
-    <string name="storage_rescan_media">Rescan media for the storage volume</string>
-    <string name="storage_rescan_media_complete">Scan completed</string>
-
     <!-- Advanced storage settings-->
     <string name="storage_title_advanced">Advanced storage settings</string>
     <string name="storage_menu_advanced">Advanced storage settings</string>
@@ -941,20 +935,6 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
 
     <!-- Performance Control -->
     <string name="performance_settings_title">Performance</string>
-
-    <!-- About device screen, Cpu info. -->
-    <string name="cpu_info">CPU</string>
-
-    <!-- About phone screen, Free memory info -->
-    <string name="mem_info">Memory</string>
-
-    <!-- Android debugging over WiFi -->
-    <string name="adb_over_network">ADB over network</string>
-    <string name="adb_over_network_summary">Enable TCP/IP debugging over network interfaces (Wi-Fi, USB networks).
-    This setting is reset on reboot</string>
-    <!-- Warning for Adb over Network -->
-    <string name="adb_over_network_warning">WARNING: When ADB over network is enabled, your phone is open for intrusions on all connected networks, 
-    including GSM data network!\n\nOnly use this feature when you are connected on trusted networks.\n\nDo you really want to enable this function?</string>
 
     <!-- Chamber of Secrets -->
     <string name="chamber_title">Chamber of secrets</string>
