@@ -1002,6 +1002,10 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="keys_action_long">Long press</string>
     <string name="keys_action_double">Double tap</string>
     <string name="no_home_key">You have no button assigned any more to the \"Home\" action!\n\nThis can make your device unusable!</string>
+    <string name="keys_show_overflow_title">Show action overflow</string>
+    <string name="keys_show_overflow_summary">Display the 3-dot overflow menu button within apps</string>
+    <string name="keys_show_overflow_toast_enable">The action overflow button may not be visible until apps are restarted</string>
+    <string name="keys_show_overflow_toast_disable">The action overflow button may not be hidden until apps are restarted</string>
 
     <!-- Delete apn confirmation dialog message -->
     <string name="confirm_delete_apn">The APN will be deleted.</string>

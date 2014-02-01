@@ -128,4 +128,15 @@
                 android:dependency="enable_hardware_rebind" />
         </PreferenceCategory>
 
+        <PreferenceCategory
+            android:title="@string/additional_options_title">
+
+            <CheckBoxPreference
+                android:key="keys_show_overflow"
+                android:title="@string/keys_show_overflow_title"
+                android:summary="@string/keys_show_overflow_summary"
+                android:defaultValue="false" />
+
+        </PreferenceCategory>
+
 </PreferenceScreen>

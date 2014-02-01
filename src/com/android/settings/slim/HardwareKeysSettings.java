@@ -37,6 +37,7 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.android.internal.util.slim.AppHelper;
 import com.android.internal.util.slim.ButtonsConstants;
@@ -66,6 +67,7 @@ public class HardwareKeysSettings extends SettingsPreferenceFragment implements
     private static final String CATEGORY_APPSWITCH = "button_keys_appSwitch";
 
     private static final String KEYS_CATEGORY_BINDINGS = "keys_bindings";
+    private static final String KEYS_SHOW_OVERFLOW = "keys_show_overflow";
     private static final String KEYS_ENABLE_CUSTOM = "enable_hardware_rebind";
     private static final String KEYS_BACK_PRESS = "keys_back_press";
     private static final String KEYS_BACK_LONG_PRESS = "keys_back_long_press";
@@ -98,6 +100,7 @@ public class HardwareKeysSettings extends SettingsPreferenceFragment implements
     private static final int KEY_MASK_APP_SWITCH = 0x10;
 
     private CheckBoxPreference mEnableCustomBindings;
+    private CheckBoxPreference mShowActionOverflow;
     private Preference mBackPressAction;
     private Preference mBackLongPressAction;
     private Preference mBackDoubleTapAction;
@@ -178,6 +181,8 @@ public class HardwareKeysSettings extends SettingsPreferenceFragment implements
 
         mEnableCustomBindings = (CheckBoxPreference) prefs.findPreference(
                 KEYS_ENABLE_CUSTOM);
+        mShowActionOverflow = (CheckBoxPreference) prefs.findPreference(
+                KEYS_SHOW_OVERFLOW);
         mBackPressAction = (Preference) prefs.findPreference(
                 KEYS_BACK_PRESS);
         mBackLongPressAction = (Preference) prefs.findPreference(
@@ -310,6 +315,12 @@ public class HardwareKeysSettings extends SettingsPreferenceFragment implements
         mEnableCustomBindings.setChecked(enableHardwareRebind);
         mEnableCustomBindings.setOnPreferenceChangeListener(this);
 
+        boolean enableOverflowButton = Settings.System.getInt(getContentResolver(),
+                Settings.System.UI_FORCE_OVERFLOW_BUTTON, 0) == 1;
+        mShowActionOverflow = (CheckBoxPreference) findPreference(KEYS_SHOW_OVERFLOW);
+        mShowActionOverflow.setChecked(enableOverflowButton);
+        mShowActionOverflow.setOnPreferenceChangeListener(this);
+
         // Handle warning dialog.
         SharedPreferences preferences =
                 getActivity().getSharedPreferences("hw_key_settings", Activity.MODE_PRIVATE);
@@ -423,6 +434,19 @@ public class HardwareKeysSettings extends SettingsPreferenceFragment implements
             boolean value = (Boolean) newValue;
             Settings.System.putInt(getContentResolver(), Settings.System.HARDWARE_KEY_REBINDING,
                     value ? 1 : 0);
+            return true;
+        } else if (preference == mShowActionOverflow) {
+            boolean enabled = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.UI_FORCE_OVERFLOW_BUTTON,
+                    enabled ? 1 : 0);
+            // Show appropriate
+            if (enabled) {
+                Toast.makeText(getActivity(), R.string.keys_show_overflow_toast_enable,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), R.string.keys_show_overflow_toast_disable,
+                        Toast.LENGTH_LONG).show();
+            }
             return true;
         }
         return false;
