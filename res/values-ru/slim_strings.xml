@@ -148,7 +148,6 @@
     <string name="auto_brightness_dialog_title">Автоуровни яркости</string>
     <string name="auto_brightness_level_format"><xliff:g id="level">%1$d</xliff:g> lux</string>
     <string name="auto_brightness_last_level_format"><xliff:g id="level">%1$d</xliff:g> -\n\u221e lux</string>
-    <string name="auto_brightness_brightness_format"><xliff:g id="percent">%s</xliff:g>%%</string>
     <string name="auto_brightness_adjust_button">Изменить</string>
     <string name="auto_brightness_close_button">Закрыть</string>
     <string name="auto_brightness_reset_button">Сбросить</string>
@@ -199,7 +198,7 @@
     <string name="wakeup_when_plugged_unplugged_title">Пробуждение при зарядке</string>
     <string name="wakeup_when_plugged_unplugged_summary">Подключение/отключение зарядного устройства пробуждает телефон.</string>
     <string name="display_category_animation_options_title">Настройки анимации</string>
-    <string name="system_power_crt_mode_title">Режим анимации</string>
+    <string name="system_power_crt_mode_title">CRT-эффект</string>
     <string name="system_power_crt_mode_dialog_title">Показывать анимацию</string>
     <string name="system_power_crt_mode_horizontal">Горизонтально в портретном режиме</string>
     <string name="system_power_crt_mode_vertical">Вертикально в портретном режиме</string>
@@ -364,12 +363,12 @@
     <string name="lockscreen_use_widget_container_carousel_title">Включить круговое листание виджетов</string>
     <string name="lockscreen_use_widget_container_carousel_summary">Использовать анимацию в стиле карусели при листании виджетов экрана блокировки в портретном режиме</string>
     <string name="lockscreen_target_info">Потяните ползунок к цели, чтобы назначить ярлык</string>
-    <string name="lockscreen_target_title">Ярлыки экрана блокировки</string>
-    <string name="lockscreen_target_summary">Установка или настройка ярлыков экрана блокировки</string>
+    <string name="lockscreen_target_title">Ярлыки кольца блокировки</string>
+    <string name="lockscreen_target_summary">Установка или настройка ярлыков кольца блокировки</string>
     <string name="lockscreen_eight_targets_title">Включить 8-целевое кольцо</string>
     <string name="lockscreen_eight_targets_summary">Включить режим, когда на кольцо можно назначить 8 действий.\nПримечание: включение этой настройки сбросит ваши текущие действия</string>
-    <string name="lockscreen_target_reset">Ярлыки экрана блокировки сброшены по умолчанию</string>
-    <string name="lockscreen_target_reset_message">Удалить все созданные ярлыки экрана блокировки и восстановить значения по умолчанию?</string>
+    <string name="lockscreen_target_reset">Ярлыки кольца блокировки сброшены по умолчанию</string>
+    <string name="lockscreen_target_reset_message">Удалить все созданные ярлыки кольца блокировки и восстановить значения по умолчанию?</string>
     <string name="lockscreen_target_empty">Пусто</string>
     <string name="lockscreen_target_edit_title">Изменить ярлык и значок</string>
     <string name="lockscreen_target_edit_msg">Выберите или измените нужные приложения или действие и значок</string>
@@ -612,6 +611,7 @@
     <string name="reset">Сброс</string>
     <string name="attention">Внимание</string>
     <string name="enabled">Включено</string>
+    <string name="disabled">Отключено</string>
     <string name="default_string">По умолчанию</string>
     <string name="reset_message">Сбросить все настройки по умолчанию?</string>
     <string name="style_title">Стиль</string>
@@ -738,11 +738,13 @@
     <string name="help_qs_message">Чтобы добавить плитку быстрых настроек, нажмите кнопку \"Добавить\" и выберите нужную плитку. Чтобы поменятьпорядок плиток, нажмите и удерживайте плитку, затем перетащите ее на нужное место. Для удаления плитки перетащите ее на кнопку удаления, которая появляется при перетаскивании.\n\n Для настройки динамических плиток нажмите соответствующий значок на экране справа вверху.\n\nЧтобы отключить быстрые настройки, удалите все плитки.</string>
     <string name="custom_tile_dialog_text">Каждое действие будет добавлять плитке новое состояние. Нажатие переключает эти состояния. По долгому нажатию задаются действия на долгое нажатие. При отсутствии основного действия по нажатию будет выполнено действие долгого нажатия. Это позволяет переключать состояния плитки обычным нажатием и запускать что-либо долгим нажатием.</string>
     <string name="custom_tile_dialog_title">Действия своего ярлыка</string>
+    <string name="custom_tile_dialog_extra_text">Обнаружена расширенная плитка. Состояние этой плитки будет изменяться в соответствии с настройкой, с которой она работает, даже если настройка была изменена из другого места. Также можно задать значок и надпись по умолчанию для плитки, если ее настройка не находится ни в одном из указанных для плитки состояний.</string>
     <string name="custom_toggle_extras">Дополнения своего ярлыка</string>
     <string name="custom_toggle_collapse_check">Сворачивать тень уведомления</string>
     <string name="custom_toggle_match_state_check">Значок для обычного нажатия</string>
     <string name="custom_tile_long_press">Долгое нажатие:</string>
     <string name="custom_tile_null_warning">Сначала нужно задать действие</string>
+    <string name="custom_tile_resolve_name">Неизвестно</string>
     <string name="quick_tiles_alpha_title">Прозрачность фона плиток</string>
     <string name="pref_music_mode_title">Режим музыки</string>
     <string name="screentimeout_mode1">15с | 1м | 5м | Никогда</string>
@@ -832,4 +834,97 @@
     <string name="cpu_info">Процессор</string>
     <string name="mem_info">Память</string>
 
+    <string name="usb_mass_storage_title">USB-накопитель</string>
+    <string name="usb_mass_storage_summary">Включить режим USB-накопителя (UMS)</string>
+    <string name="adb_over_network">ADB по сети</string>
+    <string name="adb_over_network_summary">Включить отладку TCP/IP через сетевые интерфейсы (Wi-Fi, USB сети). Эта установка сбрасывается при перезагрузке</string>
+    <string name="adb_over_network_warning">ВНИМАНИЕ: когда включён ADB по сети, телефон открыт для доступа из всех подключённых сетей, включая передачу данных GSM!\n\nИспользуйте эту функцию только тогда, когда Вы подключены к доверенным сетям.\n\nВы действительно хотите включить эту функцию?</string>
+    <string name="unlock_menu_unlock_title">Разблок. по кнопке \"Меню\"</string>
+    <string name="unlock_menu_unlock_summary">Нажатие кнопки \"Меню\" разблокирует устройство</string>
+
+    <string name="shortcut_action_assist">Поиск</string>
+    <string name="shortcut_action_voice_search">Голосовой поиск</string>
+    <string name="button_keys_title">Физические кнопки</string>
+    <string name="keys_bindings_title">Назначения кнопок</string>
+    <string name="keys_enable_custom_title">Включить свои назначения</string>
+    <string name="keys_enable_custom_summary">Включить установку своих действий на физические кнопки</string>
+    <string name="keys_back_press_title">Кнопка \"Назад\"</string>
+    <string name="keys_back_long_press_title">Кнопка \"Назад\" (долгое нажатие)</string>
+    <string name="keys_back_double_tap_title">Кнопка \"Назад\" (двойное нажатие)</string>
+    <string name="keys_home_press_title">Кнопка \"Домой\"</string>
+    <string name="keys_home_long_press_title">Кнопка \"Домой\" (долгое нажатие)</string>
+    <string name="keys_home_double_tap_title">Кнопка \"Домой\" (двойное нажатие)</string>
+    <string name="keys_menu_press_title">Кнопка \"Меню\"</string>
+    <string name="keys_menu_long_press_title">Кнопка \"Меню\" (долгое нажатие)</string>
+    <string name="keys_menu_double_tap_title">Кнопка \"Меню\" (двойное нажатие)</string>
+    <string name="keys_assist_press_title">Кнопка \"Поиск\"</string>
+    <string name="keys_assist_long_press_title">Кнопка \"Поиск\" (долгое нажатие)</string>
+    <string name="keys_assist_double_tap_title">Кнопка \"Поиск\" (двойное нажатие)</string>
+    <string name="keys_app_switch_press_title">Кнопка переключения приложений</string>
+    <string name="keys_app_switch_long_press_title">Кнопка переключения приложений (долгое нажатие)</string>
+    <string name="keys_app_switch_double_tap_title">Кнопка переключения приложений (двойное нажатие)</string>
+    <string name="keys_action_normal">Обычное нажатие</string>
+    <string name="keys_action_long">Долгое нажатие</string>
+    <string name="keys_action_double">Двойное нажатие</string>
+    <string name="no_home_key">Действие \"Домой\" не назначено ни на какую кнопку!\n\nЭто может сделать невозможным использование устройства!</string>
+
+    <string name="pie_control_size">Размер pie</string>
+    <string name="pie_control_trigger_positions">Параметры переключения</string>
+    <string name="pie_control_trigger_left">Включать по левой границе экрана</string>
+    <string name="pie_control_trigger_bottom">Включать по нижней границе экрана</string>
+    <string name="pie_control_trigger_right">Включать по правой границе экрана</string>
+    <string name="pie_control_trigger_top">Включать по верхней границе экрана</string>
+    <string name="pie_control_trigger_top_summary">Сверху будет показываться только pie</string>
+    <string name="pie_button_style">Стиль кнопок</string>
+    <string name="pie_button_color_title">Цвет кнопок</string>
+    <string name="pie_button_alpha_title">Прозрачность кнопок</string>
+    <string name="pie_button_outline_color_title">Цвет окантовки кнопок</string>
+    <string name="pie_button_pressed_color_title">Цвет нажатой кнопки</string>
+    <string name="pie_button_long_pressed_color_title">Цвет кнопки при долгом нажатии</string>
+    <string name="pie_button_pressed_alpha_title">Прозрачность нажатой кнопки</string>
+    <string name="pie_icon_style">Стиль значков кнопок</string>
+    <string name="pie_icon_color_title">Цвет значков кнопок</string>
+    <string name="pie_icon_color_mode_title">Цветовой режим значков кнопок</string>
+    <string name="pie_icon_color_mode_dialog_title">Установить цвет</string>
+    <string name="pie_icon_color_mode_summary">Изменить цветовой режим значков кнопок</string>
+    <string name="pie_trigger_note_title">Примечание</string>
+    <string name="pie_trigger_note_summary">Во избежание конфликтов со строкой состояния или строкой навигации области срабатывания сверху и снизу выключаются автоматически, если какая-либо из панелей видима</string>
+    <string name="pie_background_color_title">Цвет фона</string>
+    <string name="pie_snap_color_title">Цвет точек привязки</string>
+    <string name="pie_text_color_title">Цвет текста</string>
+    <string name="pie_background_alpha_title">Цвет фона</string>
+    <string name="pie_mirror_right_title">Зеркальный pie справа</string>
+    <string name="pie_mirror_right_summary">Зеркально отражать правый pie по вертикали</string>
+    <string name="pie_style">Стиль и размеры</string>
+    <string name="pie_style_title">Стиль</string>
+    <string name="pie_dimens_title">Размеры</string>
+    <string name="pie_show_snap_title">Показывать точки привязки</string>
+    <string name="pie_show_snap_summary">Показывать точки привязки, к которым можно перетащить pie, сделав областью срабатывания</string>
+    <string name="pie_show_text_title">Показывать состояние и часы</string>
+    <string name="pie_show_text_summary">Показывать состояние телефона, дату и время</string>
+    <string name="pie_show_background_title">Показывать фон</string>
+    <string name="pie_show_background_summary">Включить фон экрана для pie</string>
+    <string name="pie_button">Кнопки</string>
+    <string name="pie_button_second_layer">Второй уровень кнопок</string>
+    <string name="pie_button_second_layer_summary">Изменить второй уровень кнопок</string>
+    <string name="pie_button_style_summary">Изменить стиль кнопок</string>
+    <string name="pie_style_reset_message">Сбросить стили к значениям по умолчанию?</string>
+
+    <string name="slim_shortcut_picker">Действия Slim</string>
+    <string name="shortcut_action_navbar">Строка навигации</string>
+    <string name="shortcut_action_pie">Управление pie</string>
+    <string name="shortcut_action_help_pie_second_layer_delete_last_entry">Удаление последнего %1$s отключит весь второй уровень pie.</string>
+    <string name="navigation_bar_warning_no_navigation_present">Не включено никакой навигации. Отключение строки навигации может сделать использование аппарата невозможным. Стоит ли включить управление pie?</string>
+    <string name="pie_control_summary">Включить управление pie</string>
+    <string name="pie_warning_no_navigation_present">Не включено никакой навигации. Отключение pie может сделать использование аппарата невозможным. Стоит ли включить строку навигации?</string>
+    <string name="pie_trigger_warning">Должна быть включена как минимум одна основная точка привязки (внизу, слева или справа).</string>
+    <string name="pie_disable_ime_triggers_title">Отключить срабатывание на клавиатуре</string>
+    <string name="pie_disable_ime_triggers_summary">Отключает или уменьшает размер области срабатывания в зоне клавиатуры, когда клавиатура открыта</string>
+
+    <!-- Notification Reminders -->
+    <string name="noti_reminder_category">Напоминание уведомления</string>
+    <string name="noti_reminder_enable_title">Включить напоминание уведомления</string>
+    <string name="noti_reminder_sound_title">Звук напоминания</string>
+    <string name="noti_reminder_sound_looping">Пока не отключено</string>
+    <string name="noti_reminder_ringtone">Мелодия напоминания</string>
 </resources>
