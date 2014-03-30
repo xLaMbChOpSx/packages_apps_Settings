@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Android Open Kang Project
+ * Copyright (C) 2014 SlimRoms project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,19 @@ package com.android.settings.slim.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.provider.ContactsContract.PhoneLookup;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.UserHandle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract.PhoneLookup;
 import android.provider.Settings;
 import android.telephony.SmsManager;
 
@@ -34,9 +38,9 @@ import java.util.Calendar;
 
 import com.android.settings.R;
 
-public class SmsCallHelper {
+public class SmsCallController {
 
-    private final static String TAG = "SmsCallHelper";
+    private final static String TAG = "SmsCallController";
 
     private static final String KEY_AUTO_SMS = "auto_sms";
     private static final String KEY_AUTO_SMS_CALL = "auto_sms_call";
@@ -48,7 +52,7 @@ public class SmsCallHelper {
     private static final String KEY_REQUIRED_CALLS = "required_calls";
     private static final String KEY_SMS_BYPASS_CODE = "sms_bypass_code";
     private static final String SCHEDULE_SERVICE_COMMAND =
-            "com.android.settings.service.SCHEDULE_SERVICE_COMMAND";
+            "com.android.settings.slim.service.SCHEDULE_SERVICE_COMMAND";
 
     private static final int FULL_DAY = 1440; // 1440 minutes in a day
     private static final int TIME_LIMIT = 30; // 30 minute bypass limit
@@ -58,25 +62,108 @@ public class SmsCallHelper {
     public static final int STARRED_ONLY = 3;
     public static final int DEFAULT_TWO = 2;
 
+    private Context mContext;
+    private SharedPreferences mSharedPrefs;
+    private OnSharedPreferenceChangeListener mSharedPrefsObserver;
+    private AlarmManager mAlarmManager;
+
+    private Intent mServiceTriggerIntent;
+    private PendingIntent mStartIntent;
+    private PendingIntent mStopIntent;
+
+    private boolean mQuietHoursEnabled;
+    private int mQuietHoursStart;
+    private int mQuietHoursEnd;
+
+    private int mSmsBypass;
+    private int mCallBypass;
+    private int mAutoCall;
+    private int mAutoText;
+
+    private Handler mHandler = new Handler();
+
+    /**
+     * Singleton.
+     */
+    private static SmsCallController sInstance;
+
+    /**
+     * Get the instance.
+     */
+    public static SmsCallController getInstance(Context context) {
+        if (sInstance != null) {
+            return sInstance;
+        } else {
+            return sInstance = new SmsCallController(context);
+        }
+    }
+
+    /**
+     * Constructor.
+     */
+    private SmsCallController(Context context) {
+        mContext = context;
+
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        mSharedPrefsObserver =
+                new OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                if (key.equals(KEY_SMS_BYPASS)
+                        || key.equals(KEY_CALL_BYPASS)
+                        || key.equals(KEY_AUTO_SMS_CALL)
+                        || key.equals(KEY_AUTO_SMS)) {
+                    updateSharedPreferences();
+                    scheduleService();
+                }
+            }
+        };
+        mSharedPrefs.registerOnSharedPreferenceChangeListener(mSharedPrefsObserver);
+        updateSharedPreferences();
+
+        mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+
+        mServiceTriggerIntent = new Intent(mContext, SmsCallService.class);
+        Intent start = new Intent(mContext, SmsCallService.class);
+        mStartIntent = PendingIntent.getService(
+                mContext, 0, start, PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        intent.setAction(SCHEDULE_SERVICE_COMMAND);
+        mStopIntent = PendingIntent.getBroadcast(
+                mContext, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // Settings observer
+        SettingsObserver observer = new SettingsObserver(mHandler);
+        observer.observe();
+    }
+
+    private void updateSharedPreferences() {
+        mSmsBypass = Integer.parseInt(mSharedPrefs.getString(
+                KEY_SMS_BYPASS, String.valueOf(DEFAULT_DISABLED)));
+        mCallBypass = Integer.parseInt(mSharedPrefs.getString(
+                KEY_CALL_BYPASS, String.valueOf(DEFAULT_DISABLED)));
+        mAutoCall = Integer.parseInt(mSharedPrefs.getString(
+                KEY_AUTO_SMS_CALL, String.valueOf(DEFAULT_DISABLED)));
+        mAutoText = Integer.parseInt(mSharedPrefs.getString(
+                KEY_AUTO_SMS, String.valueOf(DEFAULT_DISABLED)));
+    }
+
     // Return the current time
-    public static int returnTimeInMinutes() {
+    protected int returnTimeInMinutes() {
         Calendar calendar = Calendar.getInstance();
-        int currentMinutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
-        return currentMinutes;
+        return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
     }
 
     // Return current day of month
-    public static int returnDayOfMonth() {
+    protected int returnDayOfMonth() {
         Calendar calendar = Calendar.getInstance();
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        return dayOfMonth;
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     // Return if last call versus current call less than 30 minute apart
-    public static boolean returnTimeConstraintMet(
-                Context context, int firstCallTime, int dayOfFirstCall) {
-        int currentMinutes = returnTimeInMinutes();
-        int dayOfMonth = returnDayOfMonth();
+    protected boolean returnTimeConstraintMet(int firstCallTime, int dayOfFirstCall) {
+        final int currentMinutes = returnTimeInMinutes();
+        final int dayOfMonth = returnDayOfMonth();
         // New Day, start at zero
         if (dayOfMonth != dayOfFirstCall) {
             // Less or Equal to 30 minutes until midnight
@@ -110,20 +197,15 @@ public class SmsCallHelper {
     /* True: Ringtone loops until alert dismissed
      * False: Ringtone plays only once
      */
-    public static boolean returnUserRingtoneLoop(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        boolean loop = prefs.getBoolean(KEY_LOOP_BYPASS_RINGTONE, true);
-        return loop;
+    protected boolean returnUserRingtoneLoop() {
+        return mSharedPrefs.getBoolean(KEY_LOOP_BYPASS_RINGTONE, true);
     }
 
     /* Returns user-selected alert Ringtone
      * Parsed from saved string or default ringtone
      */
-    public static Uri returnUserRingtone(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        String ringtoneString = prefs.getString(KEY_BYPASS_RINGTONE, null);
+    public Uri returnUserRingtone() {
+        String ringtoneString = mSharedPrefs.getString(KEY_BYPASS_RINGTONE, null);
         if (ringtoneString == null) {
             // Value not set, defaults to Default Ringtone
             Uri alertSoundUri = RingtoneManager.getDefaultUri(
@@ -136,21 +218,15 @@ public class SmsCallHelper {
     }
 
     // Code sender can deliver to start an alert
-    public static String returnUserTextBypassCode(Context context) {
-        String code = null;
-        String defaultCode = context.getResources().getString(
+    protected String returnUserTextBypassCode() {
+        String defaultCode = mContext.getResources().getString(
                 R.string.quiet_hours_sms_code_null);
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        code = prefs.getString(KEY_SMS_BYPASS_CODE, defaultCode);
-        return code;
+        return mSharedPrefs.getString(KEY_SMS_BYPASS_CODE, defaultCode);
     }
 
     // Number of missed calls within time constraint to start alert
-    public static int returnUserCallBypassCount(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(
+    protected int returnUserCallBypassCount() {
+        return Integer.parseInt(mSharedPrefs.getString(
                 KEY_REQUIRED_CALLS, String.valueOf(DEFAULT_TWO)));
     }
 
@@ -158,55 +234,41 @@ public class SmsCallHelper {
      * All Numbers
      * Contacts Only
      */
-    public static int returnUserTextBypass(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(
-                KEY_SMS_BYPASS, String.valueOf(DEFAULT_DISABLED)));
+    protected int returnUserTextBypass() {
+        return mSmsBypass;
     }
 
     /* Default: Off
      * All Numbers
      * Contacts Only
      */
-    public static int returnUserCallBypass(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(
-                KEY_CALL_BYPASS, String.valueOf(DEFAULT_DISABLED)));
+    protected int returnUserCallBypass() {
+        return mCallBypass;
     }
 
     /* Default: Off
      * All Numbers
      * Contacts Only
      */
-    public static int returnUserAutoCall(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(
-                KEY_AUTO_SMS_CALL, String.valueOf(DEFAULT_DISABLED)));
+    protected int returnUserAutoCall() {
+        return mAutoCall;
     }
 
     /* Default: Off
      * All Numbers
      * Contacts Only
      */
-    public static int returnUserAutoText(Context context) {
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(
-                KEY_AUTO_SMS, String.valueOf(DEFAULT_DISABLED)));
+    protected int returnUserAutoText() {
+        return mAutoText;
     }
 
     // Pull current settings and send message if applicable
-    public static void checkSmsQualifiers(Context context, String incomingNumber,
+    protected void checkSmsQualifiers(String incomingNumber,
             int userAutoSms, boolean isContact) {
         String message = null;
-        String defaultSms = context.getResources().getString(
+        String defaultSms = mContext.getResources().getString(
                 R.string.quiet_hours_auto_sms_null);
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        message = prefs.getString(KEY_AUTO_SMS_MESSAGE, defaultSms);
+        message = mSharedPrefs.getString(KEY_AUTO_SMS_MESSAGE, defaultSms);
         switch (userAutoSms) {
             case ALL_NUMBERS:
                 sendAutoReply(message, incomingNumber);
@@ -217,7 +279,7 @@ public class SmsCallHelper {
                 }
                 break;
             case STARRED_ONLY:
-                if (isContact && isStarred(context, incomingNumber)) {
+                if (isContact && isStarred(incomingNumber)) {
                     sendAutoReply(message, incomingNumber);
                 }
                 break;
@@ -227,7 +289,7 @@ public class SmsCallHelper {
     /* True: Contact
      * False: Not a contact
      */
-    public static boolean isContact(Context context, String phoneNumber) {
+    protected boolean isContact(String phoneNumber) {
         boolean isContact = false;
         Uri lookupUri = Uri.withAppendedPath(
                 PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
@@ -235,7 +297,7 @@ public class SmsCallHelper {
                 PhoneLookup._ID,
                 PhoneLookup.NUMBER,
                 PhoneLookup.DISPLAY_NAME };
-        Cursor c = context.getContentResolver().query(
+        Cursor c = mContext.getContentResolver().query(
                 lookupUri, numberProject, null, null, null);
         try {
             if (c.moveToFirst()) {
@@ -252,12 +314,12 @@ public class SmsCallHelper {
     /* True: Starred contact
      * False: Not starred
      */
-    public static boolean isStarred(Context context, String phoneNumber) {
+    protected boolean isStarred(String phoneNumber) {
         boolean isStarred = false;
         Uri lookupUri = Uri.withAppendedPath(
                 PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
         String[] numberProject = { PhoneLookup.STARRED };
-        Cursor c = context.getContentResolver().query(
+        Cursor c = mContext.getContentResolver().query(
                 lookupUri, numberProject, null, null, null);
         try {
             if (c.moveToFirst()) {
@@ -274,12 +336,12 @@ public class SmsCallHelper {
     }
 
     // Returns the contact name or number
-    public static String returnContactName(Context context, String phoneNumber) {
+    protected String returnContactName(String phoneNumber) {
         String contactName = null;
         Uri lookupUri = Uri.withAppendedPath(
                 PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
         String[] numberProject = { PhoneLookup.DISPLAY_NAME };
-        Cursor c = context.getContentResolver().query(
+        Cursor c = mContext.getContentResolver().query(
             lookupUri, numberProject, null, null, null);
 
         try {
@@ -299,21 +361,12 @@ public class SmsCallHelper {
     }
 
     // Send the message
-    private static void sendAutoReply(String message, String phoneNumber) {
+    protected void sendAutoReply(String message, String phoneNumber) {
         SmsManager sms = SmsManager.getDefault();
         try {
             sms.sendTextMessage(phoneNumber, null, message, null, null);
         } catch (IllegalArgumentException e) {
         }
-    }
-
-    // Pending intent to start/stop SmsCallservice
-    private static PendingIntent makeServiceIntent(Context context,
-            String action, int requestCode) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.setAction(action);
-        return PendingIntent.getBroadcast(
-                context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     /*
@@ -325,99 +378,84 @@ public class SmsCallHelper {
      * Time manually adjusted or Timezone Changed
      * AutoSMS service Stopped - Schedule again for next day
      */
-    public static void scheduleService(Context context) {
-        boolean quietHoursEnabled = Settings.System.getIntForUser(context.getContentResolver(),
-                Settings.System.QUIET_HOURS_ENABLED, 0,
-                UserHandle.USER_CURRENT_OR_SELF) != 0;
-        int quietHoursStart = Settings.System.getIntForUser(context.getContentResolver(),
-                Settings.System.QUIET_HOURS_START, 0,
-                UserHandle.USER_CURRENT_OR_SELF);
-        int quietHoursEnd = Settings.System.getIntForUser(context.getContentResolver(),
-                Settings.System.QUIET_HOURS_END, 0,
-                UserHandle.USER_CURRENT_OR_SELF);
-        int autoCall = returnUserAutoCall(context);
-        int autoText = returnUserAutoText(context);
-        int callBypass = returnUserCallBypass(context);
-        int smsBypass = returnUserTextBypass(context);
-        Intent serviceTriggerIntent = new Intent(context, SmsCallService.class);
-        PendingIntent startIntent = makeServiceIntent(context, SCHEDULE_SERVICE_COMMAND, 1);
-        PendingIntent stopIntent = makeServiceIntent(context, SCHEDULE_SERVICE_COMMAND, 2);
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        am.cancel(startIntent);
-        am.cancel(stopIntent);
-
-        if (!quietHoursEnabled
-                || (autoCall == DEFAULT_DISABLED
-                && autoText == DEFAULT_DISABLED
-                && callBypass == DEFAULT_DISABLED
-                && smsBypass == DEFAULT_DISABLED)) {
-            context.stopService(serviceTriggerIntent);
+    public void scheduleService() {
+        mAlarmManager.cancel(mStartIntent);
+        mAlarmManager.cancel(mStopIntent);
+        if (!mQuietHoursEnabled
+                || (mAutoCall == DEFAULT_DISABLED
+                && mAutoText == DEFAULT_DISABLED
+                && mCallBypass == DEFAULT_DISABLED
+                && mSmsBypass == DEFAULT_DISABLED)) {
+            mContext.stopServiceAsUser(mServiceTriggerIntent,
+                    android.os.Process.myUserHandle());
             return;
         }
 
-        if (quietHoursStart == quietHoursEnd) {
+        if (mQuietHoursStart == mQuietHoursEnd) {
             // 24 hours, start without stop
-            context.startService(serviceTriggerIntent);
+            mContext.startServiceAsUser(mServiceTriggerIntent,
+                    android.os.Process.myUserHandle());
             return;
         }
-
 
         Calendar calendar = Calendar.getInstance();
-        int currentMinutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+        final int currentMinutes =
+                calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
 
         boolean inQuietHours = false;
         // time from now on (in minutes) when the service start/stop should be scheduled
         int serviceStartMinutes = -1, serviceStopMinutes = -1;
 
-        if (quietHoursEnd < quietHoursStart) {
+        if (mQuietHoursEnd < mQuietHoursStart) {
             // Starts at night, ends in the morning.
-            if (currentMinutes >= quietHoursStart) {
+            if (currentMinutes >= mQuietHoursStart) {
                 // In QuietHours - quietHoursEnd in new day
                 inQuietHours = true;
-                serviceStopMinutes = FULL_DAY - currentMinutes + quietHoursEnd;
-            } else if (currentMinutes <= quietHoursEnd) {
+                serviceStopMinutes = FULL_DAY - currentMinutes + mQuietHoursEnd;
+            } else if (currentMinutes <= mQuietHoursEnd) {
                 // In QuietHours - quietHoursEnd in same day
                 inQuietHours = true;
-                serviceStopMinutes = quietHoursEnd - currentMinutes;
+                serviceStopMinutes = mQuietHoursEnd - currentMinutes;
             } else {
                 // Out of QuietHours
                 // Current time less than quietHoursStart, greater than quietHoursEnd
                 inQuietHours = false;
-                serviceStartMinutes = quietHoursStart - currentMinutes;
-                serviceStopMinutes = FULL_DAY - currentMinutes + quietHoursEnd;
+                serviceStartMinutes = mQuietHoursStart - currentMinutes;
+                serviceStopMinutes = FULL_DAY - currentMinutes + mQuietHoursEnd;
             }
         } else {
             // Starts in the morning, ends at night.
-            if (currentMinutes >= quietHoursStart && currentMinutes <= quietHoursEnd) {
+            if (currentMinutes >= mQuietHoursStart && currentMinutes <= mQuietHoursEnd) {
                 // In QuietHours
                 inQuietHours = true;
-                serviceStopMinutes = quietHoursEnd - currentMinutes;
+                serviceStopMinutes = mQuietHoursEnd - currentMinutes;
             } else {
                 // Out of QuietHours
                 inQuietHours = false;
-                if (currentMinutes <= quietHoursStart) {
-                    serviceStartMinutes = quietHoursStart - currentMinutes;
-                    serviceStopMinutes = quietHoursEnd - currentMinutes;
+                if (currentMinutes <= mQuietHoursStart) {
+                    serviceStartMinutes = mQuietHoursStart - currentMinutes;
+                    serviceStopMinutes = mQuietHoursEnd - currentMinutes;
                 } else {
                     // Current Time greater than quietHoursEnd
-                    serviceStartMinutes = FULL_DAY - currentMinutes + quietHoursStart;
-                    serviceStopMinutes = FULL_DAY - currentMinutes + quietHoursEnd;
+                    serviceStartMinutes = FULL_DAY - currentMinutes + mQuietHoursStart;
+                    serviceStopMinutes = FULL_DAY - currentMinutes + mQuietHoursEnd;
                 }
             }
         }
 
         if (inQuietHours) {
-            context.startService(serviceTriggerIntent);
+            mContext.startServiceAsUser(mServiceTriggerIntent,
+                    android.os.Process.myUserHandle());
         } else {
-            context.stopService(serviceTriggerIntent);
+            mContext.stopServiceAsUser(mServiceTriggerIntent,
+                    android.os.Process.myUserHandle());
         }
 
         if (serviceStartMinutes >= 0) {
             // Start service a minute early
             serviceStartMinutes--;
             calendar.add(Calendar.MINUTE, serviceStartMinutes);
-            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), startIntent);
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mStartIntent);
             calendar.add(Calendar.MINUTE, -serviceStartMinutes);
         }
 
@@ -425,8 +463,52 @@ public class SmsCallHelper {
             // Stop service a minute late
             serviceStopMinutes++;
             calendar.add(Calendar.MINUTE, serviceStopMinutes);
-            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), stopIntent);
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mStopIntent);
             calendar.add(Calendar.MINUTE, -serviceStopMinutes);
         }
     }
+
+    /**
+     * Settingsobserver to take care of the user settings.
+     */
+    private class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QUIET_HOURS_ENABLED),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QUIET_HOURS_START),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QUIET_HOURS_END),
+                    false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            update();
+        }
+
+        public void update() {
+
+            mQuietHoursEnabled = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.QUIET_HOURS_ENABLED, 0,
+                    UserHandle.USER_CURRENT_OR_SELF) != 0;
+            mQuietHoursStart = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.QUIET_HOURS_START, 0,
+                    UserHandle.USER_CURRENT_OR_SELF);
+            mQuietHoursEnd = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.QUIET_HOURS_END, 0,
+                    UserHandle.USER_CURRENT_OR_SELF);
+            scheduleService();
+        }
+    }
+
 }
