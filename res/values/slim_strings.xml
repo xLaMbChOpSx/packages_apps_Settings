@@ -522,6 +522,7 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="notification_hide_labels_text">in the notification panel</string>
 
     <!-- StatusBar Battery Settings -->
+    <string name="battery_style_title">Battery style</string>
     <string name="battery_icon_title">Battery icon</string>
     <string name="battery_status_icon">Icon</string>
     <string name="battery_status_percentage">Percentage</string>
@@ -1331,5 +1332,21 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
 
     <!-- Summary for "Configure lockscreen" when security gesture is enabled [CHAR LIMIT=45] -->
     <string name="unlock_set_unlock_mode_gesture">Gesture</string>
+
+    <!-- Battery Bar -->
+    <string name="status_bar_battery_bar_title">Battery bar style</string>
+    <string name="battery_bar">Battery bar location</string>
+    <string name="battery_bar_color">Battery bar color</string>
+    <string name="battery_bar_cat">Battery bar style</string>
+    <string name="battery_bar_style_title">Battery bar alignment</string>
+    <string name="battery_bar_thickness_title">Battery bar thickness</string>
+    <string name="battery_bar_animate_title">Charging animation</string>
+    <string name="battery_bar_animate_summary">The charging animation may result in a poor user experience. Enable at your own discretion.</string>
+    <string name="battery_bar_entries_hide">Hide</string>
+    <string name="battery_bar_entries_statusbar">Statusbar</string>
+    <string name="battery_bar_entries_navbar_top">Top of navbar</string>
+    <string name="battery_bar_entries_navbar_bottom">Bottom of navbar</string>
+    <string name="battery_bar_style_entries_regular">Regular</string>
+    <string name="battery_bar_style_entries_center">Center-mirrored</string>
 
 </resources>

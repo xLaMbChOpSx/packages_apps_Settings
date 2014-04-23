@@ -698,6 +698,7 @@
     <string name="shortcuts_color_mode_title">Режим цвета значка</string>
     <string name="shortcuts_color_mode_summary">Изменить режим цвета значка ярлыка</string>
     <string name="notification_drawer_qs_title">Панель уведомлений и быстрых настроек</string>
+    <string name="battery_style_title">Стиль батареи</string>
     <string name="battery_icon_title">Значок батареи</string>
     <string name="battery_status_icon">Значок</string>
     <string name="battery_status_percentage">Проценты</string>
@@ -1038,4 +1039,20 @@
     <string name="app_moving_reboot_disabled_desc">Перемещение приложений отключено.\n\nДля применения перезагрузите устройство.</string>
     <string name="app_moving_reboot_now_button">Сейчас</string>
     <string name="app_moving_reboot_later_button">Позже</string>
+
+    <!-- Battery Bar -->
+    <string name="status_bar_battery_bar_title">Полоса зарядки</string>
+    <string name="battery_bar">Положение полосы зарядки</string>
+    <string name="battery_bar_color">Цвет полосы зарядки</string>
+    <string name="battery_bar_cat">Стиль полосы зарядки</string>
+    <string name="battery_bar_style_title">Выравнивание полосы зарядки</string>
+    <string name="battery_bar_thickness_title">Толщина полосы зарядки</string>
+    <string name="battery_bar_animate_title">Анимация зарядки</string>
+    <string name="battery_bar_animate_summary">Анимация зарядки может привести к понижению производительности. Использовать на свое усмотрение.</string>
+    <string name="battery_bar_entries_hide">Скрыть</string>
+    <string name="battery_bar_entries_statusbar">Строка состояния</string>
+    <string name="battery_bar_entries_navbar_top">Верх панели навигации</string>
+    <string name="battery_bar_entries_navbar_bottom">Низ панели навигации</string>
+    <string name="battery_bar_style_entries_regular">Обычный</string>
+    <string name="battery_bar_style_entries_center">Зеркальный от центра</string>
 </resources>

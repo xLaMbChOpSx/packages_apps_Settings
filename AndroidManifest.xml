@@ -1999,6 +1999,8 @@
             </intent-filter>
         </receiver>
 
+       <activity android:name=".slim.fragments.BatteryBar" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.android.settings.files"

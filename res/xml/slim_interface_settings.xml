@@ -22,7 +22,7 @@
     <PreferenceScreen
         android:fragment="com.android.settings.slim.BatteryIconStyle"
         android:key="battery_style_pref"
-        android:title="@string/battery_icon_title" />
+        android:title="@string/battery_style_title" />
 
     <PreferenceScreen
         android:key="notification_drawer_qs"

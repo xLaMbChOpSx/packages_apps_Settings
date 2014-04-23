@@ -16,7 +16,7 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/battery_icon_title">
+    android:title="@string/battery_style_title">
 
     <ListPreference
         android:key="battery_icon"
@@ -45,5 +45,10 @@
         android:key="battery_text_charging_color"
         android:title="@string/battery_text_charging_color"
         android:defaultValue="0xffffffff" />
+
+    <PreferenceScreen
+        android:fragment="com.android.settings.slim.fragments.BatteryBar"
+        android:key="battery_style_pref"
+        android:title="@string/status_bar_battery_bar_title" />
 
 </PreferenceScreen>
