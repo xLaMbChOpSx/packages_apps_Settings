@@ -459,7 +459,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
                 mHomeUnlock.setChecked(settingsEnabled);
                 mHomeUnlock.setOnPreferenceChangeListener(this);
             } else {
-                securityCategory.removePreference(mHomeUnlock);
+                mSecurityCategory.removePreference(mHomeUnlock);
             }
         }
 
