@@ -106,6 +106,8 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
             "captioning_preference_screen";
     private static final String DISPLAY_MAGNIFICATION_PREFERENCE_SCREEN =
             "screen_magnification_preference_screen";
+    private static final String SHAKE_SENSITIVITY =
+            "shake_sensitivity";
     private static final String RECENT_PANEL_LEFTY_MODE =
             "recent_panel_lefty_mode";
     private static final String RECENT_PANEL_SCALE =
@@ -203,6 +205,7 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
     private CheckBoxPreference mToggleHomeButtonAnswersCallPreference;
     private CheckBoxPreference mToggleLockScreenRotationPreference;
     private CheckBoxPreference mToggleSpeakPasswordPreference;
+    private ListPreference mShakeSensitivity;
     private SeekBarPreference mSelectLongPressTimeoutPreference;
     private Preference mNoServicesMessagePreference;
     private PreferenceScreen mCaptioningPreferenceScreen;
@@ -252,6 +255,11 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
             String stringValue = (String) newValue;
             Settings.Secure.putInt(getContentResolver(),
                     Settings.Secure.LONG_PRESS_TIMEOUT, Integer.parseInt(stringValue));
+            return true;
+        } else if (preference == mShakeSensitivity) {
+            int value = Integer.parseInt((String) newValue);
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.SHAKE_SENSITIVITY, value);
             return true;
         } else if (preference == mRecentPanelScale) {
             int value = Integer.parseInt((String) newValue);
@@ -393,6 +401,11 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
         // Speak passwords.
         mToggleSpeakPasswordPreference =
                 (CheckBoxPreference) findPreference(TOGGLE_SPEAK_PASSWORD_PREFERENCE);
+
+        //Shake sensitivity
+        mShakeSensitivity =
+                (ListPreference) findPreference(SHAKE_SENSITIVITY);
+        mShakeSensitivity.setOnPreferenceChangeListener(this);
 
         // Long press timeout.
         mSelectLongPressTimeoutPreference =
@@ -571,6 +584,11 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
         final boolean speakPasswordEnabled = Settings.Secure.getInt(getContentResolver(),
                 Settings.Secure.ACCESSIBILITY_SPEAK_PASSWORD, 0) != 0;
         mToggleSpeakPasswordPreference.setChecked(speakPasswordEnabled);
+
+        // Shake sensitivity
+        final int shakeSensitivity = Settings.System.getInt(getContentResolver(),
+                Settings.System.SHAKE_SENSITIVITY, 0);
+        mShakeSensitivity.setValue(shakeSensitivity + "");
 
         // Long press timeout.
         final int longPressTimeout = Settings.Secure.getInt(getContentResolver(),
