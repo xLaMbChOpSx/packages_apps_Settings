@@ -8,9 +8,9 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceScreen;
 import android.preference.CheckBoxPreference;
+import android.preference.SlimSeekBarPreference;
 import android.provider.Settings;
 import com.android.settings.SettingsPreferenceFragment;
-import com.android.settings.widgets.AnimBarPreference;
 import com.android.settings.R;
 
 import com.android.internal.util.cm.AwesomeAnimationHelper;
@@ -42,7 +42,7 @@ public class AnimationControls extends SettingsPreferenceFragment implements OnP
     ListPreference mWallpaperClose;
     ListPreference mWallpaperIntraOpen;
     ListPreference mWallpaperIntraClose;
-    AnimBarPreference mAnimationDuration;
+    SlimSeekBarPreference mAnimationDuration;
     CheckBoxPreference mAnimNoOverride;
 
     private int[] mAnimations;
@@ -132,7 +132,7 @@ public class AnimationControls extends SettingsPreferenceFragment implements OnP
 
         int defaultDuration = Settings.System.getInt(mContentRes,
                 Settings.System.ANIMATION_CONTROLS_DURATION, 0);
-        mAnimationDuration = (AnimBarPreference) findPreference(ANIMATION_DURATION);
+        mAnimationDuration = (SlimSeekBarPreference) findPreference(ANIMATION_DURATION);
         mAnimationDuration.setInitValue((int) (defaultDuration));
         mAnimationDuration.setOnPreferenceChangeListener(this);
     }
