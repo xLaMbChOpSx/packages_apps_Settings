@@ -1349,4 +1349,8 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="battery_bar_style_entries_regular">Regular</string>
     <string name="battery_bar_style_entries_center">Center-mirrored</string>
 
+    <!-- Hover -->
+    <string name="blacklist_button_title">Blacklist</string>
+    <string name="hover_blacklist_label">Blacklist from Hover</string>
+
 </resources>

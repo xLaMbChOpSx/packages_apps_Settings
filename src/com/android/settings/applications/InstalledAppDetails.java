@@ -109,6 +109,7 @@ public class InstalledAppDetails extends Fragment
     private IUsbManager mUsbManager;
     private AppWidgetManager mAppWidgetManager;
     private DevicePolicyManager mDpm;
+    private INotificationManager mNotificationManager;
     private ISms mSmsManager;
     private ApplicationsState mState;
     private ApplicationsState.Session mSession;
@@ -118,8 +119,8 @@ public class InstalledAppDetails extends Fragment
     private PackageInfo mPackageInfo;
     private CanBeOnSdCardChecker mCanBeOnSdCardChecker;
     private View mRootView;
+    private static View mBlacklistDialogView;
     private Button mUninstallButton;
-    private View mMoreControlButtons;
     private Button mSpecialDisableButton;
     private boolean mMoveInProgress = false;
     private boolean mUpdatedSysApp = false;
@@ -127,6 +128,7 @@ public class InstalledAppDetails extends Fragment
     private View mScreenCompatSection;
     private CheckBox mAskCompatibilityCB;
     private CheckBox mEnableCompatibilityCB;
+    private CheckBox mHoverBlacklist;
     private boolean mCanClearData = true;
     private TextView mAppVersion;
     private TextView mTotalSize;
@@ -142,6 +144,7 @@ public class InstalledAppDetails extends Fragment
     private Button mForceStopButton;
     private Button mClearDataButton;
     private Button mMoveAppButton;
+    private Button mBlacklistButton;
     private CompoundButton mNotificationSwitch;
     private Button mAppOpsButton;
 
@@ -186,6 +189,7 @@ public class InstalledAppDetails extends Fragment
     private static final int DLG_DISABLE = DLG_BASE + 7;
     private static final int DLG_DISABLE_NOTIFICATIONS = DLG_BASE + 8;
     private static final int DLG_SPECIAL_DISABLE = DLG_BASE + 9;
+    private static final int DLG_BLACKLIST = DLG_BASE + 10;
 
     // Menu identifiers
     public static final int UNINSTALL_ALL_USERS_MENU = 1;
@@ -354,9 +358,9 @@ public class InstalledAppDetails extends Fragment
                 specialDisable = handleDisableable(mSpecialDisableButton);
                 mSpecialDisableButton.setOnClickListener(this);
             }
-            mMoreControlButtons.setVisibility(specialDisable ? View.VISIBLE : View.GONE);
+            mSpecialDisableButton.setVisibility(specialDisable ? View.VISIBLE : View.GONE);
         } else {
-            mMoreControlButtons.setVisibility(View.GONE);
+            mSpecialDisableButton.setVisibility(View.GONE);
             if ((mAppEntry.info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 enabled = handleDisableable(mUninstallButton);
             } else if ((mPackageInfo.applicationInfo.flags
@@ -397,6 +401,22 @@ public class InstalledAppDetails extends Fragment
             // Register listener
             mUninstallButton.setOnClickListener(this);
         }
+    }
+
+    private void initBlacklistButton() {
+        mBlacklistButton.setText(R.string.blacklist_button_title);
+
+        boolean allowedForHover = true;
+        try {
+            allowedForHover = mNotificationManager
+                    .isPackageAllowedForHover(mAppEntry.info.packageName);
+        } catch (android.os.RemoteException ex) {
+            // uh oh
+        }
+        mHoverBlacklist.setChecked(!allowedForHover);
+        mHoverBlacklist.setOnCheckedChangeListener(this);
+
+        mBlacklistButton.setOnClickListener(this);
     }
 
     private void initNotificationButton() {
@@ -445,6 +465,8 @@ public class InstalledAppDetails extends Fragment
         mAppWidgetManager = AppWidgetManager.getInstance(getActivity());
         mDpm = (DevicePolicyManager)getActivity().getSystemService(Context.DEVICE_POLICY_SERVICE);
         mSmsManager = ISms.Stub.asInterface(ServiceManager.getService("isms"));
+        mNotificationManager = INotificationManager.Stub.asInterface(
+                ServiceManager.getService(Context.NOTIFICATION_SERVICE));
 
         mCanBeOnSdCardChecker = new CanBeOnSdCardChecker();
 
@@ -485,10 +507,10 @@ public class InstalledAppDetails extends Fragment
         mForceStopButton.setEnabled(false);
         
         // Get More Control button panel
-        mMoreControlButtons = view.findViewById(R.id.more_control_buttons_panel);
-        mMoreControlButtons.findViewById(R.id.left_button).setVisibility(View.INVISIBLE);
-        mSpecialDisableButton = (Button)mMoreControlButtons.findViewById(R.id.right_button);
-        mMoreControlButtons.setVisibility(View.GONE);
+        View moreCtrlBtns = view.findViewById(R.id.more_control_buttons_panel);
+        mBlacklistButton = (Button)moreCtrlBtns.findViewById(R.id.left_button);
+        mSpecialDisableButton = (Button)moreCtrlBtns.findViewById(R.id.right_button);
+        mSpecialDisableButton.setVisibility(View.INVISIBLE);
         
         // Initialize clear data and move install location buttons
         View data_buttons_panel = view.findViewById(R.id.data_buttons_panel);
@@ -510,6 +532,8 @@ public class InstalledAppDetails extends Fragment
 
         mAppOps = (AppOpsManager) getActivity().getSystemService(Context.APP_OPS_SERVICE);
         mAppOpsButton = (Button) view.findViewById(R.id.app_ops_button);
+        mBlacklistDialogView = inflater.inflate(R.layout.blacklist_dialog, null);
+        mHoverBlacklist = (CheckBox) mBlacklistDialogView.findViewById(R.id.hover_blacklist);
 
         return view;
     }
@@ -1059,12 +1083,14 @@ public class InstalledAppDetails extends Fragment
             initMoveButton();
             initNotificationButton();
             initAppOpsButton();
+            initBlacklistButton();
         } else {
             mMoveAppButton.setText(R.string.moving);
             mMoveAppButton.setEnabled(false);
             mUninstallButton.setEnabled(false);
             mSpecialDisableButton.setEnabled(false);
             mAppOpsButton.setEnabled(false);
+            mBlacklistButton.setEnabled(false);
         }
     }
 
@@ -1263,6 +1289,21 @@ public class InstalledAppDetails extends Fragment
                     })
                     .setNegativeButton(R.string.dlg_cancel, null)
                     .create();
+                case DLG_BLACKLIST:
+                    AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                            .setTitle(getActivity().getText(R.string.blacklist_button_title))
+                            .setView(mBlacklistDialogView)
+                            .setNeutralButton(R.string.dlg_ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((ViewGroup)mBlacklistDialogView.getParent())
+                                            .removeView(mBlacklistDialogView);
+                                }
+                            })
+                            .create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.setCancelable(false);
+                    return dialog;
             }
             throw new IllegalArgumentException("unknown id " + id);
         }
@@ -1352,6 +1393,14 @@ public class InstalledAppDetails extends Fragment
         }
     }
 
+    private void setHoverState(boolean state) {
+        try {
+            mNotificationManager.setHoverBlacklistStatus(mAppEntry.info.packageName, state);
+        } catch (android.os.RemoteException ex) {
+            mHoverBlacklist.setChecked(!state); // revert
+        }
+    }
+
     private int getPremiumSmsPermission(String packageName) {
         try {
             if (mSmsManager != null) {
@@ -1435,6 +1484,8 @@ public class InstalledAppDetails extends Fragment
                     android.provider.Settings.ACTION_APP_OPS_DETAILS_SETTINGS,
                     Uri.parse("package:" + mAppEntry.info.packageName));
             startActivity(intent);
+        } else if (v == mBlacklistButton) {
+            showDialogInner(DLG_BLACKLIST, 0);
         }
     }
 
@@ -1454,6 +1505,8 @@ public class InstalledAppDetails extends Fragment
             } else {
                 setNotificationsEnabled(true);
             }
+        } else if (buttonView == mHoverBlacklist) {
+            setHoverState(isChecked);
         }
     }
 }
