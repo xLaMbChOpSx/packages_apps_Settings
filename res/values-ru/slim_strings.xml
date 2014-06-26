@@ -344,7 +344,7 @@
     <string name="hex_hint">#ff000000</string>
     <string name="set">Задать</string>
     <string name="battery_text_color">Цвет процентов</string>
-    <string name="battery_text_charging_color">Цвет текста при зарядке</string>
+    <string name="battery_text_charging_color">Цвет текста при зарядке (15-89%)</string>
     <string name="battery_circle_charging_color">Цвет круга при зарядке</string>
     <string name="circle_battery_animation_speed">Скорость анимации круга</string>
     <string name="circle_battery_animation_speed_none">Нет</string>
@@ -435,8 +435,8 @@
     <string name="unlock_quick_unlock_control_summary">Не требуется нажимать \&quot;ОК\&quot; после ввода пароля или PIN. Стирание засчитывается как неудачная попытка</string>
     <string name="lock_before_unlock_title">Показывать ползунок перед безопасной разблокировкой</string>
     <string name="lock_before_unlock_summary">Показывать стандартный ползунок разблокировки до безопасной разблокировки</string>
-    <string name="lock_numpad_random_title">Изменять порядок кнопока при вводе PIN</string>
-    <string name="lock_numpad_random_dialog_title">Поризвольный порядок цифр PIN</string>
+    <string name="lock_numpad_random_title">Изменять порядок кнопок при вводе PIN</string>
+    <string name="lock_numpad_random_dialog_title">Произвольный порядок цифр PIN</string>
     <string name="lock_numpad_random_off">Отключено</string>
     <string name="lock_numpad_random_always">Всегда</string>
     <string name="lock_numpad_random_on_request">По запросу</string>
@@ -455,8 +455,8 @@
     <string name="shake_secure_timeout_10min">10 минут после отключения экрана</string>
     <string name="shake_secure_timeout_30min">30 минут после отключения экрана</string>
     <string name="app_security_title">БЕЗОПАСНОСТЬ ПРИЛОЖЕНИЙ</string>
-    <string name="navigation_bar">Строка навигации</string>
-    <string name="navbar_button_cat">Кнопки строки навигации</string>
+    <string name="navigation_bar">Панель навигации</string>
+    <string name="navbar_button_cat">Кнопки панели навигации</string>
     <string name="title_pref_menu_location">Положение меню</string>
     <string name="summary_pref_menu_location">Где появляться кнопкам меню</string>
     <string name="title_pref_menu_display">Видимость меню</string>
@@ -478,7 +478,7 @@
     <string name="navbar_style_dimen_title">Стиль и размеры</string>
     <string name="navbar_button_title">Кнопки</string>
     <string name="navbar_targets_title">Ярлыки кольца</string>
-    <string name="navbar_cat">Строка навигации</string>
+    <string name="navbar_cat">Панель навигации</string>
     <string name="wifi_setting_countrycode_title">Код региона Wi-Fi</string>
     <string name="wifi_setting_countrycode_summary">Укажите код региона Wi-Fi</string>
     <string name="wifi_setting_countrycode_error">При настройке кода региона Wi-Fi возникла неполадка.</string>
@@ -965,7 +965,7 @@
     <string name="pie_icon_color_mode_dialog_title">Установить цвет</string>
     <string name="pie_icon_color_mode_summary">Изменить цветовой режим значков кнопок</string>
     <string name="pie_trigger_note_title">Примечание</string>
-    <string name="pie_trigger_note_summary">Во избежание конфликтов со строкой состояния или строкой навигации области срабатывания сверху и снизу выключаются автоматически, если какая-либо из панелей видима</string>
+    <string name="pie_trigger_note_summary">Во избежание конфликтов со строкой состояния или панелью навигации области срабатывания сверху и снизу выключаются автоматически, если какая-либо из панелей видима</string>
     <string name="pie_background_color_title">Цвет фона</string>
     <string name="pie_snap_color_title">Цвет точек привязки</string>
     <string name="pie_text_color_title">Цвет текста</string>
@@ -988,12 +988,12 @@
     <string name="pie_style_reset_message">Сбросить стили к значениям по умолчанию?</string>
 
     <string name="slim_shortcut_picker">Действия Slim</string>
-    <string name="shortcut_action_navbar">Строка навигации</string>
+    <string name="shortcut_action_navbar">Панель навигации</string>
     <string name="shortcut_action_pie">Управление pie</string>
     <string name="shortcut_action_help_pie_second_layer_delete_last_entry">Удаление последнего %1$s отключит весь второй уровень pie.</string>
-    <string name="navigation_bar_warning_no_navigation_present">Не включено никакой навигации. Отключение строки навигации может сделать использование аппарата невозможным. Стоит ли включить управление pie?</string>
+    <string name="navigation_bar_warning_no_navigation_present">Не включено никакой навигации. Отключение панели навигации может сделать использование аппарата невозможным. Стоит ли включить управление pie?</string>
     <string name="pie_control_summary">Включить управление pie</string>
-    <string name="pie_warning_no_navigation_present">Не включено никакой навигации. Отключение pie может сделать использование аппарата невозможным. Стоит ли включить строку навигации?</string>
+    <string name="pie_warning_no_navigation_present">Не включено никакой навигации. Отключение pie может сделать использование аппарата невозможным. Стоит ли включить панель навигации?</string>
     <string name="pie_trigger_warning">Должна быть включена как минимум одна основная точка привязки (внизу, слева или справа).</string>
     <string name="pie_disable_ime_triggers_title">Отключить срабатывание на клавиатуре</string>
     <string name="pie_disable_ime_triggers_summary">Отключает или уменьшает размер области срабатывания в зоне клавиатуры, когда клавиатура открыта</string>
